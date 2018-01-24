@@ -498,7 +498,7 @@ describe 'external command execution', df: true do
   end
 
   context 'with a single pipe' do
-    let(:commands) { ['cat /etc/hosts | grep localhost'] }
+    let(:commands) { ['cat /etc/hosts | wc'] }
 
     include_examples 'successful command'
 
@@ -530,7 +530,7 @@ describe 'external command execution', df: true do
   end
 
   context 'with multiple pipes' do
-    let(:commands) { ['cat /etc/hosts | grep 127 | sort | wc -l'] }
+    let(:commands) { ['cat /etc/hosts | grep host | sort | wc -l'] }
 
     include_examples 'successful command'
 
@@ -562,7 +562,7 @@ describe 'external command execution', df: true do
   end
 
   context 'with a pipe and < file redirection' do
-    let(:commands) { ["grep localhost < /etc/hosts | wc"] }
+    let(:commands) { ["grep host < /etc/hosts | wc"] }
 
     include_examples 'successful command'
 

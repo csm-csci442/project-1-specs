@@ -1,4 +1,5 @@
 require 'open4'
+require 'shellwords'
 require 'singleton'
 require_relative 'result'
 
@@ -19,7 +20,12 @@ class ShellRunner
   def run(lines = [])
     result = Result.new
 
-    status = Open4::popen4("#{@bin} 2>&1") do |pid, stdin, stdout, stderr|
+    # Annoyingly, ENV vars no longer seem to fully match between this and the
+    # spawned process. This is my lazy fix: specify them all explicitly!
+    env_vars = ENV.map{|k, v| "#{k}=#{Shellwords.shellescape v}" }.join(' ')
+    cmd = "#{env_vars} #{@bin} 2>&1"
+
+    status = Open4::popen4(cmd) do |pid, stdin, stdout, stderr|
       stdin.puts lines.join("\n")
       stdin.close
 
